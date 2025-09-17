@@ -1,37 +1,45 @@
-public class TwoThreadsExample {
+public class ChickenEggExample {
     public static void main(String[] args) {
-        Thread thread1 = new Thread(() -> {
-            for (int i = 1; i <= 5; i++) {
-                System.out.println("Потік 1: " + i);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        // Потік-курка (створений через підклас Thread)
+        Thread chickenThread = new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    System.out.println("Курка була першою!");
+                    try {
+                        Thread.sleep(1000); // 1 секунда пауза
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        });
-        Runnable task = () -> {
-            for (int i = 1; i <= 5; i++) {
-                System.out.println("Потік 2: " + i);
+        };
+
+        // Потік-яйце (створений через Runnable)
+        Runnable eggTask = () -> {
+            for (int i = 0; i < 5; i++) {
+                System.out.println("Яйце було першим!");
                 try {
-                    Thread.sleep(700);
+                    Thread.sleep(1000); // 1 секунда пауза
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         };
-        Thread thread2 = new Thread(task);
+        Thread eggThread = new Thread(eggTask);
 
-        thread1.start();
-        thread2.start();
+        // Запускаємо обидва потоки
+        chickenThread.start();
+        eggThread.start();
 
+        // Чекаємо завершення обох потоків
         try {
-            thread1.join();
-            thread2.join();
+            chickenThread.join();
+            eggThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Обидва потоки завершили роботу!");
+        System.out.println("Суперечка завершена!");
     }
 }
