@@ -1,38 +1,37 @@
-public class ChickenEggExample {
+import java.util.concurrent.atomic.AtomicReference;
+
+public class TwoThreadsExample {
     public static void main(String[] args) {
-        // Потік-курка (створений через підклас Thread)
-        Thread chickenThread = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 5; i++) {
-                    System.out.println("Курка була першою!");
-                    try {
-                        Thread.sleep(1000); // 1 секунда пауза
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        AtomicReference<String> lastWord = new AtomicReference<>(null);
+
+        Thread chickenThread = new Thread(() -> {
+            for (int i = 0; i < 5; i++) {
+                System.out.println("Курка була першою!");
+                lastWord.set("Курка");
+                try {
+                    Thread.sleep(500 + (int)(Math.random() * 700));
+                } catch (InterruptedException e) {
+                    break;
                 }
             }
-        };
+        });
 
-        // Потік-яйце (створений через Runnable)
-        Runnable eggTask = () -> {
+        Thread eggThread = new Thread(() -> {
             for (int i = 0; i < 5; i++) {
                 System.out.println("Яйце було першим!");
+                lastWord.set("Яйце");
                 try {
-                    Thread.sleep(1000); // 1 секунда пауза
+                    Thread.sleep(500 + (int)(Math.random() * 700));
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
-        };
-        Thread eggThread = new Thread(eggTask);
+        });
 
-        // Запускаємо обидва потоки
+        System.out.println("Початок суперечки!");
         chickenThread.start();
         eggThread.start();
 
-        // Чекаємо завершення обох потоків
         try {
             chickenThread.join();
             eggThread.join();
@@ -40,6 +39,7 @@ public class ChickenEggExample {
             e.printStackTrace();
         }
 
+        System.out.println("Переможець: " + lastWord.get() + "!");
         System.out.println("Суперечка завершена!");
     }
 }
