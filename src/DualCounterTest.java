@@ -51,7 +51,10 @@ public class DualCounterTest {
         t3.join();
         t4.join();
 
-        System.out.println("Final counter1 value: " + dualCounter.valueCounter1());
-        System.out.println("Final counter2 value: " + dualCounter.valueCounter2());
+        System.out.println("\n===== Final Results =====");
+        System.out.println("Final counter1: " + dualCounter.valueCounter1());
+        System.out.println("Final counter2: " + dualCounter.valueCounter2());
+
+
     }
 }
